@@ -165,6 +165,7 @@ class SlidableController {
 
   /// The value of the ratio over time.
   Animation<double> get animation => _animationController.view;
+  AnimationController get animationController => _animationController;
 
   /// Track the end gestures.
   final ValueNotifier<EndGesture?> endGesture;

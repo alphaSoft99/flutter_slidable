@@ -27,7 +27,7 @@ class Slidable extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.dragStartBehavior = DragStartBehavior.down,
     this.useTextDirection = true,
-    required this.child,
+    required this.child, required this.controller,
   }) : super(key: key);
 
   /// Whether this slidable is interactive.
@@ -42,6 +42,7 @@ class Slidable extends StatefulWidget {
   ///
   /// Defaults to true.
   final bool closeOnScroll;
+  final SlidableController controller;
 
   /// {@template slidable.groupTag}
   /// The tag shared by all the [Slidable]s of the same group.
@@ -102,7 +103,7 @@ class Slidable extends StatefulWidget {
   final Widget child;
 
   @override
-  _SlidableState createState() => _SlidableState();
+  _SlidableState createState() => _SlidableState(controller);
 
   /// The closest instance of the [SlidableController] which controls this
   /// [Slidable] that encloses the given context.
@@ -123,10 +124,12 @@ class Slidable extends StatefulWidget {
 }
 
 class _SlidableState extends State<Slidable>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late final SlidableController controller;
+    with AutomaticKeepAliveClientMixin {
+  final SlidableController controller;
   late Animation<Offset> moveAnimation;
   late bool keepPanesOrder;
+
+  _SlidableState(this.controller);
 
   @override
   bool get wantKeepAlive => !widget.closeOnScroll;
@@ -134,8 +137,7 @@ class _SlidableState extends State<Slidable>
   @override
   void initState() {
     super.initState();
-    controller = SlidableController(this)
-      ..actionPaneType.addListener(handleActionPanelTypeChanged);
+    controller.actionPaneType.addListener(handleActionPanelTypeChanged);
   }
 
   @override
@@ -213,6 +215,7 @@ class _SlidableState extends State<Slidable>
   }
 
   ActionPane? get startActionPane => widget.startActionPane;
+
   ActionPane? get endActionPane => widget.endActionPane;
 
   Alignment get actionPaneAlignment {
@@ -271,7 +274,7 @@ class _SlidableState extends State<Slidable>
               alignment: actionPaneAlignment,
               direction: widget.direction,
               isStartActionPane:
-                  controller.actionPaneType.value == ActionPaneType.start,
+              controller.actionPaneType.value == ActionPaneType.start,
               child: _SlidableControllerScope(
                 controller: controller,
                 child: content,

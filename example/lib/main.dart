@@ -3,11 +3,16 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,26 +23,29 @@ class MyApp extends StatelessWidget {
             Slidable(
               // Specify a key if the Slidable is dismissible.
               key: const ValueKey(0),
-
               // The start action pane is the one at the left or the top side.
               startActionPane: ActionPane(
                 // A motion is a widget used to control how the pane animates.
                 motion: const ScrollMotion(),
-
                 // A pane can dismiss the Slidable.
-                dismissible: DismissiblePane(onDismissed: () {}),
+                dismissible: DismissiblePane(onDismissed: () {
+                  print("TTT: asdsad");
+                }),
 
                 // All actions are defined in the children parameter.
-                children: const [
+                children: [
                   // A SlidableAction can have an icon and/or a label.
+
                   SlidableAction(
-                    onPressed: doNothing,
+                    onPressed: (_) {
+
+                    },
                     backgroundColor: Color(0xFFFE4A49),
                     foregroundColor: Colors.white,
                     icon: Icons.delete,
                     label: 'Delete',
                   ),
-                  SlidableAction(
+                  const SlidableAction(
                     onPressed: doNothing,
                     backgroundColor: Color(0xFF21B7CA),
                     foregroundColor: Colors.white,
@@ -72,9 +80,15 @@ class MyApp extends StatelessWidget {
 
               // The child of the Slidable is what the user sees when the
               // component is not dragged.
-              child: const ListTile(title: Text('Slide me')),
+              controller: SlidableController(this),
+              child: Builder(
+                builder: (context) {
+                  return const ListTile(title: Text('Slide me'));
+                }
+              ),
             ),
             Slidable(
+              controller: SlidableController(this),
               // Specify a key if the Slidable is dismissible.
               key: const ValueKey(1),
 
@@ -138,4 +152,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-void doNothing(BuildContext context) {}
+void doNothing(BuildContext context) {
+  Slidable.of(context)?.animationController.addStatusListener((status) {
+    // status == AnimationStatus.forward;
+  });
+}
