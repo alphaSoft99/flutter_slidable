@@ -180,3 +180,5 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 [stretch_motion]: https://raw.githubusercontent.com/letsar/flutter_slidable/assets/stretch_motion.gif
 [issue]: https://github.com/letsar/flutter_slidable/issues
 [pr]: https://github.com/letsar/flutter_slidable/pulls
+
+# Flutter version: 3.19.0
